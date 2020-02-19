@@ -102,10 +102,30 @@ int *array_op(int *in1, char *op, int *in2, unsigned int len)
 }
 
 /* Given a number and a bit pattern of length len <= 8, find the index in num where that pattern appears, -1 otherwise.*/
-int bit_hunt(unsigned long num, unsigned char pattern, unsigned int len);
+int bit_hunt(unsigned long num, unsigned char pattern, unsigned int len)
+{
+    unsigned long longPattern=pattern;
+    int i;
+    unsigned long mask=(1<<len)-1;
+    for (i=0; i<64-len; i++)
+    {
+        if ((longPattern<<i)==(num & (mask<<i))) return i;
+    }
+    return -1;
+}
 
 /* Given a number return 1 if it is a fibonacci number, else 0 */
-unsigned int is_fibo(unsigned long num);
+unsigned int is_fibo(unsigned long num){
+    unsigned long first=1, second=1, temp;
+    while (second<num)
+    {
+        temp=second;
+        second=first+second;
+        first=temp;
+    }
+    if (second==num) return second;
+    return 0;
+}
 
 /* Write a function that accepts a number 'x' and a number 'terms' and returns the sin of the number 'x' upto 'terms' number of terms in the infinite series for sin(x). You will be provided the infinite series. */
 double my_sin1(double x, unsigned int terms); 
@@ -217,12 +237,13 @@ int main()
     printf("%x\n",endian_convert(0x12345678));
     printf("%s\n",reverse_new_str("qwerty"));
     printf("%s\n",deduplicate_in_place("aaaaahdhjadhsss"));
-    
     int x[]={10,10,10,10};
     int y[]={5,5,5,5};
     char z[]={'+','-','*','/'};
     int *retArr=array_op(x,z,y,4);
     printf("%d %d %d %d\n",retArr[0],retArr[1],retArr[2],retArr[3]);
-    
+    printf("%d\n",bit_hunt(0b001010101010101100011,0b1100,4));
+    printf("%d\n",is_fibo(55));
+    printf("%d\n",is_fibo(56));
     return 0;
 }
